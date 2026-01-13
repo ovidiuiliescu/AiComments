@@ -13,6 +13,26 @@ An AI Comment is a normal comment with a distinctive wrapper:
 /*[ <payload> ]*/
 ```
 
+Conceptually, it’s “a normal comment containing a bracketed payload”: the host language’s comment delimiter plus a `[` … `]` wrapper around the payload.
+
+**Portable wrappers (treat as equivalent):**
+
+```text
+//[ <payload> ]   (C/C++/JS/TS/Java/etc line comments)
+# [ <payload> ]   (Python / YAML / TOML)
+-- [ <payload> ]  (Lua / SQL)
+; [ <payload> ]   (INI-style configs)
+```
+
+If a repository defines a different wrapper, prefer the repo’s convention, but keep the same prefix semantics.
+
+Recommended detection patterns (for tooling/agents):
+
+```text
+Block:  /\/\*\[\s*([\s\S]*?)\s*\]\*\//
+Line:   /^\s*(?://|#|--|;)\s*\[\s*(.*?)\s*\]\s*$/
+```
+
 Inside the brackets, the payload may start with an optional **prefix operator**:
 
 - No prefix: intent/context
@@ -62,6 +82,7 @@ These explain **why** the code is written a certain way.
 
 These are requirements.
 
+- Prefer rules that are checkable (inputs/outputs/side effects). If it can’t be made concrete, consider using `?` rationale or a no-prefix intent comment instead.
 - If the code violates a `~` rule, you must **surface it clearly**.
 - If you are asked to implement or modify code near a `~` rule, treat satisfying the rule as a hard requirement unless the user explicitly overrides it.
 
@@ -79,6 +100,7 @@ These are actionable instructions from a human (or earlier agent) to you.
 - Implement it with minimal, targeted changes.
 - After completion, replace the leading `>` with `:` (keep the rest of the text the same).
 - After flipping to `:`, ask the operator whether they want the completed comment deleted.
+- Recommend frequent cleanup of lingering `>` and completed `:` (for example, during PR review).
 
 If the instruction is ambiguous or risky:
 - ask a clarifying question before making changes
@@ -105,6 +127,23 @@ When reasoning about code, associate AI Comments with the nearest relevant scope
 
 - Comments immediately above a function/class/block apply to that unit.
 - Inline comments apply to the next statement or the surrounding small block.
+- AI Comments should appear **immediately before** the entity they describe (method definition, class declaration, code block, etc).
+
+Coverage guidance:
+
+- Ideally, add AI Comments to **all critical or complex methods**.
+- Also comment small methods when they are **high-signal** (important behavior, tricky logic, subtle constraints).
+- Skip AI Comments for small and trivial methods.
+
+Small examples (format only):
+
+```ts
+//[ ? Allocating in hot path is slow ]
+function renderFrameNoAlloc() { /* ... */ }
+
+//[ ~ Must return cached value when key is unchanged ]
+class Cache { /* ... */ }
+```
 
 Prioritization rules:
 
