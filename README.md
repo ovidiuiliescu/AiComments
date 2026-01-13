@@ -13,6 +13,7 @@ A lightweight comment convention for better human–AI collaboration in codebase
 - [Where can AI Comments appear?](#where-can-ai-comments-appear)
 - [Equivalents for other languages](#equivalents-for-other-languages)
 - [Writing good AI Comments](#writing-good-ai-comments)
+- [Try It Out](#try-it-out)
 - [For AI Agents](#for-ai-agents)
 - [FAQ](#faq)
 - [License](#license)
@@ -264,6 +265,22 @@ The wrapper changes; the semantics stay the same.
 - Prefer “why” and constraints over restating obvious code
 - Avoid secrets or sensitive data in comments
 - If code changes invalidate a comment, update the comment (or remove it)
+
+## Try It Out
+
+The easiest way to get a feel for the concept is to play with the two sample apps:
+
+- `samples/sample_app_no_ai_comments` — a small multi-file TypeScript CLI sample app with no AI Comments.
+- `samples/sample_app_with_ai_comments` — a similar sample app, already annotated with AI Comments (and intentionally includes a few extra features and `>` tasks to experiment with).
+
+To make your agent behave consistently across both samples, copy `AICOMMENTS_FOR_AGENTS.md` into each sample repo (or otherwise provide it to your agent as repo instructions).
+
+Then try a few prompts with your favorite AI coding agent:
+
+- Ask it to add AI Comments to the sample without them.
+- Ask it to list all **actionable** AI Comments in the annotated sample (anything with `>`).
+- Ask it to implement one or two of those actionable AI Comments (and ensure it flips `>` to `:` after completion).
+- Intentionally change some code in a way that breaks a `~` rule, then ask the agent to check the **latest diff** for rule breaks.
 
 ## For AI Agents
 

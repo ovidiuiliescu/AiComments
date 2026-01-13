@@ -1,0 +1,15 @@
+{
+  "name": "sample-app-with-ai-comments",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Small multi-file TypeScript CLI sample app (with AI comments).",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "npm run build && npm run start"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
